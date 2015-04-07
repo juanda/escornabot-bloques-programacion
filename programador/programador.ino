@@ -12,7 +12,7 @@
 int btnReadProg    = 2;
 int leerPrograma   = 0;
 int timeStab       = 500; // tiempo que dejaremos pasar para que se
-                          // estabilice las entradas analogicas
+                          // estabilicen las entradas analogicas
 char programa[NUM_ANALOG_IN][NUM_DIGITAL_OUT];
 
 
