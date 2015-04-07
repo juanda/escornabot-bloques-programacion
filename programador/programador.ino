@@ -19,8 +19,8 @@ char programa[NUM_ANALOG_IN][NUM_DIGITAL_OUT];
 void setup(){
   pinMode(btnReadProg, INPUT);
   
-  // Definimos los pines del 3 al 13 como de salida y colocamos 
-  // 0 Volts en ellos
+  // Definimos los pines del MIN_DIGITAL_OUT al MAX_DIGITAL_OUT
+  // de salida y colocamos 0 Volts en ellos
   for(int pin = MIN_DIGITAL_OUT; pin <= MAX_DIGITAL_OUT; pin++){
     pinMode(pin, OUTPUT);
     digitalWrite(pin,LOW);
