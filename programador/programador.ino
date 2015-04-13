@@ -2,6 +2,11 @@
  Programador por bloques para el escornabot.
 */
 
+#define LEVEL_NORTH 260
+#define LEVEL_EAST  350
+#define LEVEL_SOUTH 500
+#define LEVEL_WEST  1023
+
 #define MIN_DIGITAL_OUT 3
 #define MAX_DIGITAL_OUT 5
 #define MIN_ANALOG_IN 0
@@ -73,10 +78,10 @@ char decodeVoltageLevel(int voltageLevel){
 
   char result;
   
-  if(voltageLevel >= 0  && voltageLevel <= 260)   result = 'N'; // NORTE
-  if(voltageLevel >= 261 && voltageLevel <= 350)  result = 'E'; // ESTE
-  if(voltageLevel >= 351 && voltageLevel <= 500)  result = 'S'; // SUR
-  if(voltageLevel >= 501 && voltageLevel <= 1023) result = 'W'; // OESTE
+  if(voltageLevel >= 0  && voltageLevel <= LEVEL_NORTH)          result = 'N'; // NORTE
+  if(voltageLevel > LEVEL_NORTH  && voltageLevel <= LEVEL_EAST)  result = 'E'; // ESTE
+  if(voltageLevel > LEVEL_EAST   && voltageLevel <= LEVEL_SOUTH) result = 'S'; // SUR
+  if(voltageLevel > LEVEL_SOUTH  && voltageLevel <= LEVEL_WEST)  result = 'W'; // OESTE
 
   dumpResult(voltageLevel, result);
   
