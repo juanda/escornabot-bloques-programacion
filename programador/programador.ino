@@ -2,10 +2,10 @@
  Programador por bloques para el escornabot.
 */
 
-#define MIN_DIGITAL_OUT 4
-#define MAX_DIGITAL_OUT 13
+#define MIN_DIGITAL_OUT 3
+#define MAX_DIGITAL_OUT 5
 #define MIN_ANALOG_IN 0
-#define MAX_ANALOG_IN 5
+#define MAX_ANALOG_IN 0
 #define NUM_ANALOG_IN   MAX_ANALOG_IN - MIN_ANALOG_IN + 1
 #define NUM_DIGITAL_OUT MAX_DIGITAL_OUT - MIN_DIGITAL_OUT + 1 
 
@@ -46,20 +46,15 @@ void loop(){
       // leemos todas las entradas analogicas
       for(int a = MIN_ANALOG_IN; a <= MAX_ANALOG_IN; a++){
         programa[a-MIN_ANALOG_IN][pin-MIN_DIGITAL_OUT] = decodeVoltageLevel(analogRead(a));
-        Serial.print(a);
-        Serial.print("\t");
-        Serial.print(pin);
-        Serial.print("\t");
-        Serial.println(programa[a-MIN_ANALOG_IN][pin-MIN_DIGITAL_OUT]);
+        dump(a, pin);
+        
       }
     }
     // Ahora lanzamos el programa al monitor serial. En su momento
     // habra que hacerlo al bluetooth.
-    for(int a = MIN_ANALOG_IN; a <= MAX_ANALOG_IN; a++){
-      for(int pin = MIN_DIGITAL_OUT; pin <= MAX_DIGITAL_OUT; pin++){               
-        Serial.println(programa[a-MIN_ANALOG_IN][pin-MIN_DIGITAL_OUT]);
-      }      
-    }       
+    sendToSerial();
+    sendToBot();
+       
   }  
 
 }
@@ -78,15 +73,49 @@ char decodeVoltageLevel(int voltageLevel){
 
   char result;
   
-  if(voltageLevel >= 0  && voltageLevel <= 25)   result = 'S'; // STOP
-  if(voltageLevel >= 25 && voltageLevel <= 30)   result = 'A'; // AVANZA
-  if(voltageLevel >= 30 && voltageLevel <= 36)   result = 'R'; // RETROCEDE
-  if(voltageLevel >= 36 && voltageLevel <= 45)   result = 'D'; // GIRO DERECHA
-  if(voltageLevel >= 45 && voltageLevel <= 1023) result = 'I'; // GIRO IZQUIERDA  
+  if(voltageLevel >= 0  && voltageLevel <= 260)   result = 'N'; // NORTE
+  if(voltageLevel >= 261 && voltageLevel <= 350)  result = 'E'; // ESTE
+  if(voltageLevel >= 351 && voltageLevel <= 500)  result = 'S'; // SUR
+  if(voltageLevel >= 501 && voltageLevel <= 1023) result = 'W'; // OESTE
 
-  Serial.print(voltageLevel);
-  Serial.print("\t");
-  Serial.print(result);
-  Serial.print("\t");
+  dumpResult(voltageLevel, result);
+  
   return result;
+}
+
+void sendToSerial(){
+  Serial.println("Programa");
+  Serial.println('R'); // Reset
+  for(int a = MIN_ANALOG_IN; a <= MAX_ANALOG_IN; a++){
+    for(int pin = MIN_DIGITAL_OUT; pin <= MAX_DIGITAL_OUT; pin++){               
+      Serial.println(programa[a-MIN_ANALOG_IN][pin-MIN_DIGITAL_OUT]);
+    }      
+  } 
+  Serial.println('G'); // Go
+  Serial.println("End Programa");
+}
+
+void sendToBot(){
+  // send 'R' (reset)
+  // send programa
+  // send 'G' (go)
+}
+
+void dump(int a, int pin){
+  Serial.println("Lectura");
+  Serial.print(a);
+  Serial.print("\t");
+  Serial.print(pin);
+  Serial.print("\t");
+  Serial.println(programa[a-MIN_ANALOG_IN][pin-MIN_DIGITAL_OUT]);
+  Serial.println("End Lectura");
+  
+}
+
+void dumpResult(int vl, char r){
+  Serial.println("Result");
+  Serial.print(vl);
+  Serial.print("\t");
+  Serial.println(r);
+  Serial.println("End Result");
 }
